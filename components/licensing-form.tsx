@@ -39,6 +39,7 @@ export default function LicensingForm() {
   const [minorFirstCheck, setMinorFirstCheck] = useState(false)
   const [minorSecondCheck, setMinorSecondCheck] = useState(false)
   const [minorThirdCheck, setMinorThirdCheck] = useState(false)
+  const [minorLicenseCheck, setMinorLicenseCheck] = useState(false)
   const [guardianFirstCheck, setGuardianFirstCheck] = useState(false)
   const [guardianSecondCheck, setGuardianSecondCheck] = useState(false)
   const [guardianThirdCheck, setGuardianThirdCheck] = useState(false)
@@ -189,6 +190,10 @@ export default function LicensingForm() {
       }
     } else {
       // Minor flow validation
+      if (!minorLicenseCheck) {
+        alert("You must read and agree to the Exclusive License Agreement.")
+        hasErrors = true
+      }
       if (!minorThirdCheck) {
         alert("You must confirm you are at least 13 years old.")
         hasErrors = true
@@ -209,7 +214,7 @@ export default function LicensingForm() {
         alert("Guardian email is required.")
         hasErrors = true
       }
-      if (!hasSignature) {
+      if (!hasMinorSignature) {
         alert("Minor signature is required.")
         hasErrors = true
       }
@@ -451,12 +456,18 @@ export default function LicensingForm() {
               <Checkbox
                 ref={checkboxRef}
                 checked={firstCheck}
-                onCheckedChange={handleFirstCheckboxClick}
+                onCheckedChange={() => {
+                  setIsModalOpen(true)
+                  setShowValidation(false)
+                }}
                 className="mt-0.5"
               />
               <label
                 className="text-sm text-gray-700 leading-relaxed cursor-pointer"
-                onClick={handleFirstCheckboxClick}
+                onClick={() => {
+                  setIsModalOpen(true)
+                  setShowValidation(false)
+                }}
               >
                 I have read and fully agree to the{" "}
                 <a
@@ -464,7 +475,6 @@ export default function LicensingForm() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-blue-600 hover:text-blue-800 underline"
-                  onClick={(e) => e.stopPropagation()}
                 >
                   Exclusive License Agreement.
                 </a>
@@ -574,6 +584,27 @@ export default function LicensingForm() {
             </h2>
 
             <div className="space-y-4">
+              <div className="flex items-start space-x-3">
+                <Checkbox
+                  checked={minorLicenseCheck}
+                  onCheckedChange={(checked) => {
+                    setIsModalOpen(true)
+                  }}
+                  className="mt-0.5"
+                />
+                <label className="text-sm text-gray-700 leading-relaxed cursor-pointer">
+                  I have read and fully agree to the{" "}
+                  <a
+                    href="https://sda-assets.s3.us-east-1.amazonaws.com/Minor+BVIRAL_Exclusive+Agreement+1.27.25.pdf"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:text-blue-800 underline"
+                  >
+                    Exclusive License Agreement
+                  </a>
+                </label>
+              </div>
+
               <div className="flex items-start space-x-3">
                 <Checkbox checked={minorFirstCheck} onCheckedChange={setMinorFirstCheck} className="mt-0.5" />
                 <label
@@ -772,7 +803,10 @@ export default function LicensingForm() {
                 <Checkbox checked={guardianFirstCheck} onCheckedChange={handleFirstCheckboxClick} className="mt-0.5" />
                 <label
                   className="text-sm text-gray-700 leading-relaxed cursor-pointer"
-                  onClick={handleFirstCheckboxClick}
+                  onClick={() => {
+                    setIsModalOpen(true)
+                    setShowValidation(false)
+                  }}
                 >
                   I have read and fully agree to the{" "}
                   <a
@@ -780,7 +814,6 @@ export default function LicensingForm() {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-blue-600 hover:text-blue-800 underline"
-                    onClick={(e) => e.stopPropagation()}
                   >
                     Exclusive License Agreement
                   </a>{" "}
